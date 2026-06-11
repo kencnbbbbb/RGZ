@@ -3,19 +3,30 @@
 #include "chacha20_crypto.h"
 #include "utils.h"
 
+// Заглушки для новых шифров (пока только выводят сообщение)
+void a1y33_encrypt_decrypt(const std::string& filename) {
+    std::cout << "Шифр А1Я33 (заглушка, ещё не реализован)" << std::endl;
+}
+
+void shamir_encrypt_decrypt(const std::string& filename) {
+    std::cout << "Шифр Шамира (заглушка, ещё не реализован)" << std::endl;
+}
+
 int main() {
     std::cout << "ПРОСТАЯ ПРОГРАММА ДЛЯ ШИФРОВАНИЯ ФАЙЛОВ" << std::endl;
     std::cout << "=======================================" << std::endl;
     std::cout << "1. RSA (Гибридный)" << std::endl;
     std::cout << "2. ChaCha20-Poly1305" << std::endl;
-    std::cout << "3. Выход" << std::endl;
+    std::cout << "3. Шифр А1Я33" << std::endl;
+    std::cout << "4. Шифр Шамира" << std::endl;
+    std::cout << "5. Выход" << std::endl;
     std::cout << "=======================================" << std::endl;
     
     int choice;
     std::cout << "Выберите вариант: ";
     std::cin >> choice;
     
-    if (choice == 3) {
+    if (choice == 5) {
         return 0;
     }
     
@@ -29,6 +40,10 @@ int main() {
         rsa_encrypt_decrypt(filename);
     } else if (choice == 2) {
         chacha20_encrypt_decrypt(filename);
+    } else if (choice == 3) {
+        a1y33_encrypt_decrypt(filename);
+    } else if (choice == 4) {
+        shamir_encrypt_decrypt(filename);
     }
     
     return 0;
