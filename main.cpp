@@ -12,6 +12,14 @@ void shamir_encrypt_decrypt(const std::string& filename) {
     std::cout << "Шифр Шамира (заглушка, ещё не реализован)" << std::endl;
 }
 
+void messi_omura_encrypt_decrypt(const std::string& filename) {
+    std::cout << "Протокол Месси-Омура (заглушка, ещё не реализован)" << std::endl;
+}
+
+void rabin_encrypt_decrypt(const std::string& filename) {
+    std::cout << "Криптосистема Рабина (заглушка, ещё не реализован)" << std::endl;
+}
+
 int main() {
     std::cout << "ПРОСТАЯ ПРОГРАММА ДЛЯ ШИФРОВАНИЯ ФАЙЛОВ" << std::endl;
     std::cout << "=======================================" << std::endl;
@@ -19,14 +27,16 @@ int main() {
     std::cout << "2. ChaCha20-Poly1305" << std::endl;
     std::cout << "3. Шифр А1Я33" << std::endl;
     std::cout << "4. Шифр Шамира" << std::endl;
-    std::cout << "5. Выход" << std::endl;
+    std::cout << "5. Протокол Месси-Омура" << std::endl;
+    std::cout << "6. Криптосистема Рабина" << std::endl;
+    std::cout << "7. Выход" << std::endl;
     std::cout << "=======================================" << std::endl;
     
     int choice;
     std::cout << "Выберите вариант: ";
     std::cin >> choice;
     
-    if (choice == 5) {
+    if (choice == 7) {
         return 0;
     }
     
@@ -44,6 +54,10 @@ int main() {
         a1y33_encrypt_decrypt(filename);
     } else if (choice == 4) {
         shamir_encrypt_decrypt(filename);
+    } else if (choice == 5) {
+        messi_omura_encrypt_decrypt(filename);
+    } else if (choice == 6) {
+        rabin_encrypt_decrypt(filename);
     }
     
     return 0;
