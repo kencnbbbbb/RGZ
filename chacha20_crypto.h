@@ -3,6 +3,8 @@
 
 #include <string>
 
-void chacha20_encrypt_decrypt(const std::string& filename);
+using namespace std;
+
+void chacha20_encrypt_decrypt(const string& filename);
 
 #endif

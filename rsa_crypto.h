@@ -3,6 +3,8 @@
 
 #include <string>
 
-void rsa_encrypt_decrypt(const std::string& filename);
+using namespace std;
+
+void rsa_encrypt_decrypt(const string& filename);
 
 #endif

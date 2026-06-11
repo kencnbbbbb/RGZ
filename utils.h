@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 
-void print_hex(const std::string& label, const std::vector<unsigned char>& data);
-std::vector<unsigned char> read_file(const std::string& filename);
-void write_file(const std::string& filename, const std::vector<unsigned char>& data);
-std::string select_file();
+using namespace std;
+
+void print_hex(const string& label, const vector<unsigned char>& data);
+vector<unsigned char> read_file(const string& filename);
+void write_file(const string& filename, const vector<unsigned char>& data);
+string select_file();
 
 #endif
