@@ -1,7 +1,65 @@
 #include <iostream>
+#include <fstream>
+#include <string>
 #include "rsa_crypto.h"
 #include "chacha20_crypto.h"
 #include "utils.h"
+#include "Rabin.h"
+#include "mess.h"
+
+using namespace std;
+
+// Функции, необходимые для работы Rabin и mess
+string inputMessage() {
+    cout << "Введите текст (или оставьте пустым, чтобы выбрать файл): ";
+    string msg;
+    cin.ignore();
+    getline(cin, msg);
+    
+    if (msg.empty()) {
+        cout << "Выбор файла...\n";
+        string filename = select_file();
+        if (!filename.empty()) {
+            ifstream file(filename);
+            if (file.is_open()) {
+                stringstream buffer;
+                buffer << file.rdbuf();
+                msg = buffer.str();
+                file.close();
+            }
+        }
+    }
+    return msg;
+}
+
+void saveResult(const string& result) {
+    cout << "\nРезультат:\n" << result << endl;
+    
+    string filename = "result.txt";
+    cout << "Сохранить в файл (y/n, по умолчанию result.txt)? ";
+    char choice;
+    cin >> choice;
+    
+    if (choice == 'y' || choice == 'Y') {
+        cout << "Введите имя файла для сохранения: ";
+        cin.ignore();
+        getline(cin, filename);
+    }
+    
+    ofstream file(filename);
+    if (file.is_open()) {
+        file << result;
+        file.close();
+        cout << "Сохранено в " << filename << endl;
+    } else {
+        cerr << "Ошибка сохранения файла" << endl;
+    }
+}
+
+void clearInput() {
+    cin.clear();
+    while (cin.get() != '\n');
+}
 
 // Заглушки для новых шифров (пока только выводят сообщение)
 void a1y33_encrypt_decrypt(const std::string& filename) {
@@ -10,14 +68,6 @@ void a1y33_encrypt_decrypt(const std::string& filename) {
 
 void shamir_encrypt_decrypt(const std::string& filename) {
     std::cout << "Шифр Шамира (заглушка, ещё не реализован)" << std::endl;
-}
-
-void messi_omura_encrypt_decrypt(const std::string& filename) {
-    std::cout << "Протокол Месси-Омура (заглушка, ещё не реализован)" << std::endl;
-}
-
-void rabin_encrypt_decrypt(const std::string& filename) {
-    std::cout << "Криптосистема Рабина (заглушка, ещё не реализован)" << std::endl;
 }
 
 int main() {
@@ -40,10 +90,13 @@ int main() {
         return 0;
     }
     
-    std::string filename = select_file();
-    if (filename.empty()) {
-        std::cout << "Файл не выбран!" << std::endl;
-        return 1;
+    std::string filename; // Для совместимости
+    if (choice == 1 || choice == 2) {
+        filename = select_file();
+        if (filename.empty()) {
+            std::cout << "Файл не выбран!" << std::endl;
+            return 1;
+        }
     }
     
     if (choice == 1) {
@@ -55,9 +108,23 @@ int main() {
     } else if (choice == 4) {
         shamir_encrypt_decrypt(filename);
     } else if (choice == 5) {
-        messi_omura_encrypt_decrypt(filename);
+        int sub_choice;
+        cout << "\n1. Шифрование Месси-Омура\n2. Дешифрование Месси-Омура\nВыберите: ";
+        cin >> sub_choice;
+        if (sub_choice == 1) {
+            masseyOmuraEncrypt();
+        } else if (sub_choice == 2) {
+            masseyOmuraDecrypt();
+        }
     } else if (choice == 6) {
-        rabin_encrypt_decrypt(filename);
+        int sub_choice;
+        cout << "\n1. Шифрование Рабина\n2. Дешифрование Рабина\nВыберите: ";
+        cin >> sub_choice;
+        if (sub_choice == 1) {
+            rabinEncrypt();
+        } else if (sub_choice == 2) {
+            rabinDecrypt();
+        }
     }
     
     return 0;
