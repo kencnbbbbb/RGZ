@@ -1,24 +1,31 @@
-# Простой Makefile для компиляции C++ программы шифрования
-# Использование:
-#   make         - компилировать программу
-#   make clean   - удалить скомпилированные файлы
-
+# Makefile для шифровальной программы
 CC = g++
 CFLAGS = -std=c++17 -Wall -Wextra -O2
 LIBS = -lssl -lcrypto
-
 TARGET = crypto_demo
-SRC = main.cpp
+OBJS = main.o utils.o rsa_crypto.o chacha20_crypto.o
 
 all: $(TARGET)
 
-$(TARGET): $(SRC)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRC) $(LIBS)
-	@echo "Программа скомпилирована успешно!"
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
+	@echo "Компиляция прошла успешно!"
 	@echo "Запустите: ./$(TARGET)"
 
+main.o: main.cpp rsa_crypto.h chacha20_crypto.h utils.h
+	$(CC) $(CFLAGS) -c main.cpp
+
+utils.o: utils.cpp utils.h
+	$(CC) $(CFLAGS) -c utils.cpp
+
+rsa_crypto.o: rsa_crypto.cpp rsa_crypto.h utils.h
+	$(CC) $(CFLAGS) -c rsa_crypto.cpp
+
+chacha20_crypto.o: chacha20_crypto.cpp chacha20_crypto.h utils.h
+	$(CC) $(CFLAGS) -c chacha20_crypto.cpp
+
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) $(OBJS)
 	rm -f *.enc *.key *.nonce *.decrypted
 	@echo "Файлы очищены!"
 
