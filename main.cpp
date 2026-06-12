@@ -1,11 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include "rsa_crypto.h"
 #include "chacha20_crypto.h"
 #include "utils.h"
 #include "Rabin.h"
 #include "mess.h"
+#include "A1Ya33.h"
+#include "Shamir.h"
 
 using namespace std;
 
@@ -61,13 +64,98 @@ void clearInput() {
     while (cin.get() != '\n');
 }
 
-// Заглушки для новых шифров (пока только выводят сообщение)
-void a1y33_encrypt_decrypt(const std::string& filename) {
-    std::cout << "Шифр А1Я33 (заглушка, ещё не реализован)" << std::endl;
+// Функции для А1Я33 и Шамира
+void a1y33_encrypt_decrypt() {
+    cout << "\n   Шифр А1Я33" << endl;
+    
+    A1Ya33Cipher cipher;
+    string text, result;
+    int choice;
+    
+    cout << "1. Шифровать из файла" << endl;
+    cout << "2. Дешифровать из файла" << endl;
+    cout << "Выберите: ";
+    cin >> choice;
+    clearInput();
+    
+    string filename = select_file();
+    if (filename.empty()) {
+        cout << "Файл не выбран!" << endl;
+        return;
+    }
+    
+    if (!readFromFile(filename, text)) {
+        cout << "Ошибка чтения файла!" << endl;
+        return;
+    }
+    
+    cout << "Показывать шаги? (1-да, 0-нет): ";
+    bool showSteps;
+    cin >> showSteps;
+    clearInput();
+    
+    if (choice == 1) {
+        result = cipher.encrypt(text, showSteps);
+        string outFilename = filename + ".a1ya33.enc";
+        if (writeToFile(outFilename, result)) {
+            cout << "Зашифровано и сохранено в " << outFilename << endl;
+        }
+    } else if (choice == 2) {
+        result = cipher.decrypt(text, showSteps);
+        string outFilename = filename + ".a1ya33.decrypted";
+        if (writeToFile(outFilename, result)) {
+            cout << "Дешифровано и сохранено в " << outFilename << endl;
+        }
+    }
 }
 
-void shamir_encrypt_decrypt(const std::string& filename) {
-    std::cout << "Шифр Шамира (заглушка, ещё не реализован)" << std::endl;
+void shamir_encrypt_decrypt() {
+    cout << "\n   Шифр Шамира" << endl;
+    
+    ShamirCipher cipher;
+    string text, result;
+    int choice;
+    
+    if (!cipher.keysAreCorrect()) {
+        cout << "Ошибка в ключах Шамира!" << endl;
+        return;
+    }
+    
+    cout << "1. Шифровать из файла" << endl;
+    cout << "2. Дешифровать из файла" << endl;
+    cout << "Выберите: ";
+    cin >> choice;
+    clearInput();
+    
+    string filename = select_file();
+    if (filename.empty()) {
+        cout << "Файл не выбран!" << endl;
+        return;
+    }
+    
+    if (!readFromFile(filename, text)) {
+        cout << "Ошибка чтения файла!" << endl;
+        return;
+    }
+    
+    cout << "Показывать шаги? (1-да, 0-нет): ";
+    bool showSteps;
+    cin >> showSteps;
+    clearInput();
+    
+    if (choice == 1) {
+        result = cipher.encrypt(text, showSteps);
+        string outFilename = filename + ".shamir.enc";
+        if (writeToFile(outFilename, result)) {
+            cout << "Зашифровано и сохранено в " << outFilename << endl;
+        }
+    } else if (choice == 2) {
+        result = cipher.decrypt(text, showSteps);
+        string outFilename = filename + ".shamir.decrypted";
+        if (writeToFile(outFilename, result)) {
+            cout << "Дешифровано и сохранено в " << outFilename << endl;
+        }
+    }
 }
 
 int main() {
@@ -104,9 +192,9 @@ int main() {
     } else if (choice == 2) {
         chacha20_encrypt_decrypt(filename);
     } else if (choice == 3) {
-        a1y33_encrypt_decrypt(filename);
+        a1y33_encrypt_decrypt();
     } else if (choice == 4) {
-        shamir_encrypt_decrypt(filename);
+        shamir_encrypt_decrypt();
     } else if (choice == 5) {
         int sub_choice;
         cout << "\n1. Шифрование Месси-Омура\n2. Дешифрование Месси-Омура\nВыберите: ";
